@@ -38,10 +38,10 @@ Install this in your home directory in a Linux host, and you can even add it to 
 or as an alias within your .bashrc file.
 
 In .bashrc create a line:
-alias wp-config='/path/to/wp-config.sh'
+ alias wp-config='/path/to/wp-config.sh'
 
 Then either logout/login again, or simply issue the command:
-% source ~/.bashrc
+ $: source ~/.bashrc
 
 Future Features
 ===============
