@@ -105,7 +105,7 @@ $MYSQL -u "$U" -p"$P" -h "$H" -e "$SQL"
 # Now populate a few more variables and create the wp-config.php file
 {
 
-Create a nice strong WP table_prefix so that hackers cannot hit your tables easily
+# Create a nice strong WP table_prefix so that hackers cannot hit your tables easily
 a=`</dev/urandom tr -dc A-Za-z0-9 | head -c6`
 b="_"
 c=$a$b
