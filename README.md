@@ -34,9 +34,18 @@ password salts grabbed from the WordPress API. Also included is an ugly 6-char W
 to obfuscate the table names, to ward off SQL injections, etc.
 
 
+Assumptions
+===========
+- You use a standard Linux server of some flavor with the bash shell installed to run this
+script. You will also need PHP5 configured to work with Apache.
+- You are running Apache2 and your site configuration files are in /etc/apache2/sites-available.
+- You have a MySQL server engine running locally or remotely, and the proper credentials
+to create users and DBs.
+
+
 Installation
 ============
-Install this in your home directory in a Linux host, and you can even add it to your path
+Copy this into your home directory (or a script directory), and you can even add it to your path
 or as an alias within your .bashrc file.
 
 In .bashrc create a line:
@@ -49,10 +58,6 @@ The script can then be invoked by the command from anywhere:
  $: wp-config
 
 
-Future Features
-===============
-Since this was written just for -me- I may add to it as necessary, of course taking advantage
-of good WP settings that I want to make the default.
-
-I believe my next step would be making the script even more interactive, since the settings
-near the top may not be obvious to everyone.
+Free
+====
+Please send a note if you have any feedback or suggestions of new features.
