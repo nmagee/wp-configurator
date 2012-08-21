@@ -1,7 +1,8 @@
 #!/bin/bash
 
 ###
-# This script does four things in order:
+# This script does five things in order:
+#   0. Asks the user for some variables in order to run
 #   1. Creates and populates a web root with WordPress
 #   2. Creates an Apache site config for the web root
 #   3. Creates a remote MySQL database for the site
@@ -11,28 +12,33 @@
 
 set -e
 
-hostdom=".company.com" 	// the domain for your server
-basedir="/home-nfs" 	// no trailing slashes
-webmaster="webmaster@company.com"		// the email address of your site admin
-U="dbsuperuser"			// your DB superuser
-P="dbpassword" 			// your DB password
-H="dbhost" 				// the name of your DB host, localhost or remote
-
 # Read the site/DB name from user input
-echo -e "Assign a primary identifier to this site (a simple name): [ENTER]"
+echo -e "Assign a primary identifier to this site (a simple name for the directory, using no spaces): [ENTER]"
 read dbname
 echo -e "What is the primary domain for this site? ($dbname.org, etc.): [ENTER]"
 read domain
 echo -e "List any additional server aliases for this site (*.$dbname.*, etc.): [ENTER]"
 read serveralias
+echo -e "What is the path to your base directory for web content (use a full path, i.e. /home or /var/www, etc.): [ENTER]"
+read basedir
+echo -e "What is the email address of your server administrator? (i.e. webmaster@company.com): [ENTER]"
+read webmaster
+echo -e "What is the address for your MySQL server? (localhost, 192.168.1.5, mysql1.company.com, mysql.cxytrzwjjoQ0m.us-east-1.rds.amazonaws.com, etc.): [ENTER]"
+read dbhost
+echo -e "What is the name of a MySQL superuser (root, etc.): [ENTER]"
+read dbsuperuser
+echo -e "What is the password for $dbsuperuser?: [ENTER]"
+read dbpassword
+
 
 # Create a strong DB password
 dbpass=`</dev/urandom tr -dc A-Za-z0-9 | head -c12`
 
-hostpre=`cat /etc/hostname`
-hostname=$hostpre$hostdom
+# Store the name of the host machine
+hostname=`cat /etc/hostname`
 
 # Create the webroot and populate with the latest WordPress
+# Assigns basic permissions and clears out some unnecessary files.
 mkdir $basedir/$dbname
 chown nobody.nogroup $basedir/$dbname
 cd $basedir/$dbname
@@ -49,7 +55,7 @@ mkdir www/wp-content/uploads
 chmod 777 www/wp-content/uploads
 chown -R www-data.www-data $webroot
 
-# Create Apache config file
+# Create Apache config file and load into /etc/apache2/sites-available/
 {
 echo "<VirtualHost *:80>";
 echo "	ServerAdmin $webmaster";
@@ -83,29 +89,28 @@ echo "";
 echo "</VirtualHost>";
 } > /etc/apache2/sites-available/$dbname
 
+# Symbolically link the hard file into sites-enabled
 ln -s /etc/apache2/sites-available/$dbname /etc/apache2/sites-enabled/999-$domain
 /etc/init.d/apache2 restart
 
-# Now talk to the AWS RDS instance and create user and DB
+# Now talk to the MySQL instance and create user and DB with right permisions
 MYSQL=`which mysql`
-
 Q1="CREATE DATABASE IF NOT EXISTS $dbname;"
 Q2="GRANT USAGE ON *.* TO '$dbname'@'%' IDENTIFIED BY '$dbpass';"
 Q3="GRANT ALL PRIVILEGES ON $dbname.* TO $dbname@'%';"
 Q4="FLUSH PRIVILEGES;"
-
 SQL="${Q1}${Q2}${Q3}${Q4}"
-
 $MYSQL -u "$U" -p"$P" -h "$H" -e "$SQL"
 
-# Now populate a few more variables and create the wp-config.php file.
-
+# Now populate a few more variables and create the wp-config.php file
 {
 
+Create a nice strong WP table_prefix so that hackers cannot hit your tables easily
 a=`</dev/urandom tr -dc A-Za-z0-9 | head -c6`
 b="_"
 c=$a$b
 
+# Go get a fresh set of salts from WordPress
 curl -s https://api.wordpress.org/secret-key/1.1/salt/ > /tmp/salts
 
 echo "<?php";
@@ -134,9 +139,11 @@ echo "require_once(ABSPATH . 'wp-settings.php');";
 
 } > $webroot/wp-config.php
 
+# Some final permissions
 chmod 644 $webroot/wp-config.php
 chown www-data.www-data $webroot/wp-config.php
 
+# Finally, echo back the back-end details to the user
 echo "--------------------------------------------------"
 echo "Your WordPress site has been created and deployed:"
 echo "--------------------------------------------------"
