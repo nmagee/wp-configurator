@@ -5,12 +5,13 @@ A bash script to install WordPress in a new webroot, create the proper Apache si
 create a remote or local MySQL database, and to automatically create a wp-config.php file 
 for the site.
 
-I wrote this script for work with a client, which needs numerous WP sites set up on short
+I wrote this script for work with someone who often numerous WP sites set up on short
 notice. After creating countless webroots in Apache, downloading and expanding the WP code
 base, forgetting the "good" settings I always mean to remember to put in wp-config.php, and
 issuing lots of remote commands to MySQL to set up a new DB, I just decided to script it.
 
 All of it.
+
 
 Details
 =======
@@ -32,6 +33,7 @@ of revisions kept, caching turned on, autosave spaced every 5 minutes, and a fre
 password salts grabbed from the WordPress API. Also included is an ugly 6-char WP prefix,
 to obfuscate the table names, to ward off SQL injections, etc.
 
+
 Installation
 ============
 Install this in your home directory in a Linux host, and you can even add it to your path
@@ -42,6 +44,10 @@ In .bashrc create a line:
 
 Then either logout/login again, or simply issue the command:
  $: source ~/.bashrc
+ 
+The script can then be invoked by the command from anywhere:
+ $: wp-config
+
 
 Future Features
 ===============
