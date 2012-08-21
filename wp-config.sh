@@ -24,11 +24,11 @@ read basedir
 echo -e "What is the email address of your server administrator? (i.e. webmaster@company.com): [ENTER]"
 read webmaster
 echo -e "What is the address for your MySQL server? (localhost, 192.168.1.5, mysql1.company.com, mysql.cxytrzwjjoQ0m.us-east-1.rds.amazonaws.com, etc.): [ENTER]"
-read dbhost
+read H
 echo -e "What is the name of a MySQL superuser (root, etc.): [ENTER]"
-read dbsuperuser
+read U
 echo -e "What is the password for $dbsuperuser?: [ENTER]"
-read dbpassword
+read P
 
 
 # Create a strong DB password
@@ -113,6 +113,7 @@ c=$a$b
 # Go get a fresh set of salts from WordPress
 curl -s https://api.wordpress.org/secret-key/1.1/salt/ > /tmp/salts
 
+# Create the wp-config.php file and drop it in place.
 echo "<?php";
 echo "/** Custom WP configurator. */";
 echo "/** DB Settings */";
