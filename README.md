@@ -11,10 +11,10 @@ I wrote this script for work with someone who often numerous WP sites set up on 
 Details
 =======
 Here's what happens in this script:
-- It asks for a "simple" name for your site, such as to be used in a directory name. Use no spaces in this name, such as "bilbobaggins".
-- It prompts you for a domain to be used with the site, such as "bilbobaggins.org", etc., as well as any ServerAlias names, such as *.bilbobaggins.* or such.
+- It asks for a "simple" name for your site, such as to be used in a directory name. Use no spaces in this name, such as `bilbobaggins`. (Max 12 chars)
+- It prompts you for a domain to be used with the site, such as `bilbobaggins.org`, etc., as well as any ServerAlias names, such as `bilbobaggins` or such.
 - It also asks for the appropriate DB server address, superuser, and password.
-- The script then creates a new subdirectory in your base directory ("/home" in many cases).
+- The script then creates a new subdirectory in your base directory (`/home` in many cases).
 - It grabs a fresh copy of the WP source files from WordPress.com and unpacks them.
 - It removes a few unnecessary files, creates an uploads directory and chmods it properly.
 - It then creates an Apache config file and symbolically links it in sites-enabled. It also restarts the Apache2 daemon.
@@ -25,7 +25,7 @@ Here's what happens in this script:
 Assumptions
 ===========
 - You use a standard Linux server of some flavor with the bash shell installed to run this script. You will also need PHP5 configured to work with Apache.
-- You are running Apache2 and your site configuration files are in /etc/apache2/sites-available.
+- You are running Apache2 and your site configuration files are in `/etc/apache2/sites-available`.
 - You have a MySQL server engine running locally or remotely, and the proper credentials to create users and DBs.
 
 
@@ -34,13 +34,16 @@ Installation
 Copy this into your home directory (or a script directory), and you can even add it to your path or as an alias within your .bashrc file.
 
 In .bashrc create a line:
- alias wp-config='/path/to/wp-config.sh'
+
+` alias wp-config='/path/to/wp-config.sh'`
 
 Then either logout/login again, or simply issue the command:
- $: source ~/.bashrc
+
+` $: source ~/.bashrc`
  
 The script can then be invoked by the command from anywhere:
- $: wp-config
+
+` $: wp-config`
 
 
 Free
