@@ -51,9 +51,10 @@ rm www/wp-config-sample.php
 rm www/readme.html
 rm www/license.txt
 touch www/.htaccess
+chown -R nobody.nogroup $webroot
+chmod -R 755 $webroot
 mkdir www/wp-content/uploads
 chmod 777 www/wp-content/uploads
-chown -R www-data.www-data $webroot
 
 # Create Apache config file and load into /etc/apache2/sites-available/
 {
